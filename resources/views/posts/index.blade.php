@@ -11,5 +11,7 @@
                 <a href="{{ route('single-post', ['id' => $post->id]) }}">{{ $post->title }}</a>       
             </li>
         @endforeach
-    </ul>
+    </ul>       
+     {{ $posts->links() }}
+
 @endsection
