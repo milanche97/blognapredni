@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Tag;
 
-// index - list users - GET /users 
+
+// index - list users - GET /users
 // show - single user - GET /users/:id
 // create - create user form - GET /users/create*
 // store - create user in db - POST /users
@@ -20,8 +22,10 @@ class PostsController extends Controller
     }
 
     public function index() {
-        $posts = Post::paginate(10);
-        // $posts = Post::with('user')->paginate(10);
+        // $posts = Post::paginate(10);
+        $posts = Post::with('user')
+        ->latest()
+        ->paginate(10);
 
         return view('posts.index', compact('posts'));
     }
@@ -31,7 +35,7 @@ class PostsController extends Controller
         // SELECT * FROM posts WHERE id = $id
 
         $post = Post::with('comments')->find($id);
-        // SELECT * FROM posts 
+        // SELECT * FROM posts
         // LEFT JOIN comments ON posts.id = comments.post_id where id = 1;
 
 
@@ -39,29 +43,26 @@ class PostsController extends Controller
     }
 
     public function create() {
-        return view('posts.create');
+        $tags = Tag::all();
+        return view('posts.create', compact('tags'));
     }
 
     public function store() {
-        // $post = new Post();
-
-        // $post->title = request('title');
-        // $post->body = request('body');
-
-        // $post->save();
         $this->validate(
             request(),
             [
                 'title' => 'required|max:20',
-                'body' => 'required'
+                'body' => 'required',
+                'tags' => 'sometimes|array',
             ]
         );
 
-        Post::create([
+        $post = Post::create([
             'title' => request('title'),
             'body' => request('body'),
             'user_id' => auth()->id(),
         ]);
+        $post->tags()->attach(Request('tags'));
 
         return redirect('/posts');
     }

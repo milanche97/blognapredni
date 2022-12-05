@@ -107,6 +107,18 @@
             <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
           </div>
 
+          <label class="form-label">Tags</label>
+          <div class="list-group">
+            @foreach ($tags as $tag)
+                <a
+                    href="{{ route('posts-by-tag', [ 'tag' => $tag->name ]) }}"
+                    class="list-group-item list-group-item-action {{ request ('tag') === $tag->name ? 'active' : ''}}"
+                >
+                    {{ $tag->name }}
+                </a>
+            @endforeach
+          </div>
+
           <div class="p-3">
             <h4 class="font-italic">Archives</h4>
             <ol class="list-unstyled mb-0">

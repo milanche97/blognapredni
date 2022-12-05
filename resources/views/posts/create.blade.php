@@ -25,6 +25,31 @@
             @include('partials.error')
         @enderror
 
+        @if (count($tags))
+            <label class="form-label">Tags</label>
+            @foreach ($tags as $tag)
+                <div class="form-check">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="tag{{ $tag->id }}"
+                        name="tags[]"
+                        value={{ $tag->id }}
+                    >
+                    <label
+                        class="form-check-label"
+                        for="tag{{ $tag->id }}"
+                    >
+                        {{ $tag->name }}
+                    </label>
+              </div>
+            @endforeach
+
+            @error('tags')
+                @include('partials.error')
+            @enderror
+        @endif
+
         <button type="submit">Create post</button>
     </form>
 @endsection
